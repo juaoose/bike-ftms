@@ -36,13 +36,6 @@ Widget scanResultsToWidget(List<ScanResult> data, BuildContext context) {
                         : d.device.platformName,
                   );
                 }),
-            subtitle: Text(d.device.remoteId.str),
-            leading: SizedBox(
-              width: 40,
-              child: Center(
-                child: Text(d.rssi.toString()),
-              ),
-            ),
             trailing: getButtonForBluetoothDevice(d.device, context),
           ),
         )

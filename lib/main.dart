@@ -34,7 +34,7 @@ class _FlutterFTMSAppState extends State<FlutterFTMSApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("flutter_ftms example"),
+        title: const Text("Bike FTMS"),
       ),
       body: const ScanPage(),
     );
