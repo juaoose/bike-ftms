@@ -106,7 +106,7 @@ class _FTMSPageState extends State<FTMSPage> {
             MachineControlPoint.setTargetResistanceLevel(resistanceLevel: 3);
         break;
       case MachineControlPointOpcodeType.setTargetPower:
-        controlPoint = MachineControlPoint.setTargetPower(power: 34);
+        controlPoint = MachineControlPoint.setTargetPower(power: 75);
         break;
       case MachineControlPointOpcodeType.setTargetHeartRate:
         controlPoint = MachineControlPoint.setTargetHeartRate(heartRate: 45);
@@ -133,7 +133,7 @@ class _FTMSPageState extends State<FTMSPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-              '${widget.ftmsDevice.platformName} (${FTMS.getDeviceDataTypeWithoutConnecting(widget.ftmsDevice)})'),
+              '${widget.ftmsDevice.platformName} (${FTMS.getDeviceDataType(widget.ftmsDevice)})'),
           bottom: const TabBar(
             tabs: <Widget>[
               Tab(
