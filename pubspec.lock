@@ -74,10 +74,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_ftms
-      sha256: "4335b856d94cc8f00af3d2ffce6217bc22e51662830eb1da60b233cbd29ac8ae"
+      sha256: "9c166b22fb1889771299aa40a112d669a4feb74564911c3781a26dc99fe84ae4"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   flutter_lints:
     dependency: "direct dev"
     description:
