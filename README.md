@@ -1,16 +1,19 @@
 # bike_ftms
 
-A new Flutter project.
+An attempt to make a Cycling Smart Trainer control app.
 
-## Getting Started
+## Desired Features
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- [x] Load FIT workouts.
+- [ ] Play FIT workouts.
+- [ ] Connect to FTMS stmart trainers.
+- [ ] Control FTMS smart trainers.
+- [ ] Connect to HRM bands.
+- [ ] Record executed workouts.
+- [ ] Export executed workouts as FIT files.
+- [ ] Upload executed workouts to Strava.
+- [ ] Upload executed workouts to Intervals.icu.
+- [ ] Upload executed workouts to TrainingPeaks.
+- [ ] Pull workouts from Intervals.icu.
+- [ ] Pull workouts from TrainingPeaks.
+- [ ] Execute workouts in the background.
