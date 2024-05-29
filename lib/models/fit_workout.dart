@@ -1,9 +1,9 @@
 import 'package:fit_tool/fit_tool.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:file_picker/file_picker.dart' as picker;
 
 class FitFileState {
-  final PlatformFile? selectedFile;
+  final picker.PlatformFile? selectedFile;
   final String? workoutName;
   final List<WorkoutStepMessage>? workoutSteps;
   final bool isLoading;
@@ -18,7 +18,7 @@ class FitFileState {
   });
 
   FitFileState copyWith({
-    PlatformFile? selectedFile,
+    picker.PlatformFile? selectedFile,
     String? workoutName,
     List<WorkoutStepMessage>? workoutSteps,
     bool? isLoading,
@@ -38,7 +38,13 @@ class FitFileNotifier extends StateNotifier<FitFileState> {
   FitFileNotifier() : super(FitFileState());
 
   Future<void> pickFile() async {
-    final result = await FilePicker.platform.pickFiles(withReadStream: true);
+    final result = await picker.FilePicker.platform.pickFiles(
+        type: picker.FileType.custom,
+        allowedExtensions: [
+          'fit',
+        ],
+        withData: false,
+        withReadStream: true);
 
     if (result != null) {
       state = state.copyWith(
@@ -50,7 +56,7 @@ class FitFileNotifier extends StateNotifier<FitFileState> {
     }
   }
 
-  Future<void> _processFitFile(PlatformFile file) async {
+  Future<void> _processFitFile(picker.PlatformFile file) async {
     try {
       final stream = file.readStream;
 
