@@ -47,19 +47,22 @@ class StaticWorkoutGraph extends StatelessWidget {
 
     double duration = 0;
 
-    for (var i = 0; i < steps.length; i++) {
+    for (int i = 0; i < steps.length; i++) {
       final step = steps[i];
       if (step.durationType == WorkoutStepDuration.time) {
         duration += step.durationTime!.toDouble();
       } else if (step.durationType ==
           WorkoutStepDuration.repeatUntilStepsCmplt) {
-        // We need to repeat the previous X steps
         final numRepeats = step.targetValue!;
-        final stepsToRepeat = steps.sublist(step.durationValue!, i);
+        final startRepeatIndex = step.durationValue!;
+        final endRepeatIndex = i;
+
         for (int j = 0; j < numRepeats; j++) {
-          for (int k = 0; k < stepsToRepeat.length; k++) {
-            final repeatStep = stepsToRepeat[k];
-            duration += repeatStep.durationTime!.toDouble();
+          for (int k = startRepeatIndex; k < endRepeatIndex; k++) {
+            final repeatStep = steps[k];
+            if (repeatStep.durationType == WorkoutStepDuration.time) {
+              duration += repeatStep.durationTime!.toDouble();
+            }
           }
         }
       }
@@ -76,27 +79,29 @@ class StaticWorkoutGraph extends StatelessWidget {
     }
 
     double initialX = 0;
-    for (var i = 0; i < steps.length; i++) {
+    for (int i = 0; i < steps.length; i++) {
       final step = steps[i];
       if (step.durationType == WorkoutStepDuration.time) {
         final power = step.customTargetPowerHigh!.toDouble() - 1000;
+        double durationTime = step.durationTime!.toDouble();
         spots.add(FlSpot(initialX, power));
-        var finalX = initialX + step.durationTime!.toDouble();
-        spots.add(FlSpot(finalX, power));
-        initialX = initialX + step.durationTime!.toDouble();
+        initialX += durationTime;
+        spots.add(FlSpot(initialX, power));
       } else if (step.durationType ==
           WorkoutStepDuration.repeatUntilStepsCmplt) {
-        // We need to repeat the previous X steps
+        // These messages signal that we repeat intervals
         final numRepeats = step.targetValue!;
-        final stepsToRepeat = steps.sublist(step.durationValue!, i);
+        final startRepeatIndex = step.durationValue!;
+        final endRepeatIndex = i;
+
         for (int j = 0; j < numRepeats; j++) {
-          for (int k = 0; k < stepsToRepeat.length; k++) {
-            final repeatStep = stepsToRepeat[k];
+          for (int k = startRepeatIndex; k < endRepeatIndex; k++) {
+            final repeatStep = steps[k];
             final power = repeatStep.customTargetPowerHigh!.toDouble() - 1000;
+            double durationTime = repeatStep.durationTime!.toDouble();
             spots.add(FlSpot(initialX, power));
-            var finalX = initialX + repeatStep.durationTime!.toDouble();
-            spots.add(FlSpot(finalX, power));
-            initialX = finalX;
+            initialX += durationTime;
+            spots.add(FlSpot(initialX, power));
           }
         }
       }
