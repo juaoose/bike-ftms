@@ -1,3 +1,4 @@
+import 'package:bike_ftms/fmts_device_selection.dart';
 import 'package:flutter/material.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -7,15 +8,20 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Go back!'),
+        appBar: AppBar(
+          title: const Text('Settings'),
         ),
-      ),
-    );
+        body: ListView(
+          children: [
+            ListTile(
+              title: const Text("Device Manager"),
+              subtitle: const Text("Manage your bluetooth devices"),
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const FlutterFTMSApp())),
+            ),
+          ],
+        ));
   }
 }

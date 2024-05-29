@@ -3,25 +3,6 @@ import 'package:bike_ftms/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ftms/flutter_ftms.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter FTMS Example App',
-      theme: ThemeData(
-        useMaterial3: true,
-      ),
-      home: const FlutterFTMSApp(),
-    );
-  }
-}
-
 class FlutterFTMSApp extends StatefulWidget {
   const FlutterFTMSApp({super.key});
 
@@ -34,7 +15,7 @@ class _FlutterFTMSAppState extends State<FlutterFTMSApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Bike FTMS"),
+        title: const Text("Devices Manager"),
       ),
       body: const ScanPage(),
     );
