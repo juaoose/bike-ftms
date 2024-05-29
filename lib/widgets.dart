@@ -1,5 +1,5 @@
 import 'package:bike_ftms/bloc.dart';
-import 'package:bike_ftms/main.dart';
+import 'package:bike_ftms/main1.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ftms/flutter_ftms.dart';
