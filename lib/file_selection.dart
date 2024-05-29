@@ -1,4 +1,5 @@
 import 'package:bike_ftms/models/fit_workout.dart';
+import 'package:bike_ftms/static_workout_graph.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,6 +31,8 @@ class FileSelectionScreen extends ConsumerWidget {
               'FIT File Result: ${fitFileState.workoutName} ${fitFileState.workoutSteps?.length}')
         else if (fitFileState.errorMessage != null)
           Text('Error: ${fitFileState.errorMessage}'),
+        if (fitFileState.workoutName != null)
+          StaticWorkoutGraph(state: fitFileState)
       ],
     );
   }
