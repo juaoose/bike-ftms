@@ -17,7 +17,7 @@ class StaticWorkoutGraph extends StatelessWidget {
           child: LineChart(
             LineChartData(
                 minX: 0,
-                maxX: 9000,
+                maxX: workoutDuration(state.workoutSteps),
                 minY: 0,
                 maxY: 500,
                 lineBarsData: [
@@ -41,8 +41,30 @@ class StaticWorkoutGraph extends StatelessWidget {
   }
 
   double workoutDuration(List<WorkoutStepMessage>? steps) {
-    //TODO
-    return 2000;
+    if (steps == null) {
+      return 0;
+    }
+
+    double duration = 0;
+
+    for (var i = 0; i < steps.length; i++) {
+      final step = steps[i];
+      if (step.durationType == WorkoutStepDuration.time) {
+        duration += step.durationTime!.toDouble();
+      } else if (step.durationType ==
+          WorkoutStepDuration.repeatUntilStepsCmplt) {
+        // We need to repeat the previous X steps
+        final numRepeats = step.targetValue!;
+        final stepsToRepeat = steps.sublist(step.durationValue!, i);
+        for (int j = 0; j < numRepeats; j++) {
+          for (int k = 0; k < stepsToRepeat.length; k++) {
+            final repeatStep = stepsToRepeat[k];
+            duration += repeatStep.durationTime!.toDouble();
+          }
+        }
+      }
+    }
+    return duration;
   }
 
   // Converts the FIT file steps to spots on a graph
