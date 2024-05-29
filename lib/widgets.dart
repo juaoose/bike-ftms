@@ -1,13 +1,9 @@
 import 'package:bike_ftms/bloc.dart';
 import 'package:bike_ftms/fmts_device_selection.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ftms/flutter_ftms.dart';
 
 Widget scanBluetoothButton(bool? isScanning) {
-  if (kDebugMode) {
-    print('isScanning changed: $isScanning');
-  }
   if (isScanning == null) {
     return Container();
   }
@@ -55,7 +51,7 @@ Widget getButtonForBluetoothDevice(
         switch (deviceState) {
           case BluetoothConnectionState.disconnected:
             return ElevatedButton(
-              child: const Text("Connect"),
+              child: const Text("Pair"),
               onPressed: () async {
                 final snackBar = SnackBar(
                   content: Text('Connecting to ${device.platformName}...'),
