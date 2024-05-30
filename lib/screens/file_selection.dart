@@ -1,3 +1,4 @@
+import 'package:bike_ftms/models/device.dart';
 import 'package:bike_ftms/models/fit_workout.dart';
 import 'package:bike_ftms/screens/settings.dart';
 import 'package:bike_ftms/screens/workout.dart';
@@ -12,6 +13,7 @@ class FileSelectionScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final fitFileState = ref.watch(fitFileProvider);
     final fitFileNotifier = ref.read(fitFileProvider.notifier);
+    final deviceState = ref.watch(deviceProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -21,8 +23,7 @@ class FileSelectionScreen extends ConsumerWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => const SettingsScreen()),
+                MaterialPageRoute(builder: (context) => const SettingsScreen()),
               );
             },
             icon: const Icon(Icons.settings),
@@ -32,6 +33,9 @@ class FileSelectionScreen extends ConsumerWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Text(deviceState != null
+              ? deviceState.advName
+              : "No connected device"),
           ElevatedButton(
             onPressed: () => fitFileNotifier.pickFile(),
             child: const Text('Pick File'),

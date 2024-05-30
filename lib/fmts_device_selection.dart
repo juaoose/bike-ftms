@@ -1,16 +1,18 @@
 import 'package:bike_ftms/bloc.dart';
+import 'package:bike_ftms/models/device.dart';
 import 'package:bike_ftms/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ftms/flutter_ftms.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class FlutterFTMSApp extends StatefulWidget {
+class FlutterFTMSApp extends ConsumerStatefulWidget {
   const FlutterFTMSApp({super.key});
 
   @override
-  State<FlutterFTMSApp> createState() => _FlutterFTMSAppState();
+  ConsumerState<FlutterFTMSApp> createState() => _FlutterFTMSAppState();
 }
 
-class _FlutterFTMSAppState extends State<FlutterFTMSApp> {
+class _FlutterFTMSAppState extends ConsumerState<FlutterFTMSApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,19 +24,27 @@ class _FlutterFTMSAppState extends State<FlutterFTMSApp> {
   }
 }
 
-class ScanPage extends StatefulWidget {
+class ScanPage extends ConsumerStatefulWidget {
   const ScanPage({super.key});
 
   @override
-  State<ScanPage> createState() => _ScanPageState();
+  ConsumerState<ScanPage> createState() => _ScanPageState();
 }
 
-class _ScanPageState extends State<ScanPage> {
+class _ScanPageState extends ConsumerState<ScanPage> {
   @override
   Widget build(BuildContext context) {
+    final device = ref.watch(deviceProvider);
+    final deviceNotifier = ref.read(deviceProvider.notifier);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        if (device != null) Text(device.advName),
+        if (device != null)
+          ElevatedButton(
+              onPressed: () => deviceNotifier.disconnect(),
+              child: const Text("Disconnect")),
         Center(
           child: StreamBuilder<bool>(
             stream: FTMS.isScanning,
@@ -43,14 +53,87 @@ class _ScanPageState extends State<ScanPage> {
           ),
         ),
         StreamBuilder<List<ScanResult>>(
-          stream: FTMS.scanResults,
-          initialData: const [],
-          builder: (c, snapshot) => scanResultsToWidget(
-              (snapshot.data ?? [])
-                  .where((element) => element.device.platformName.isNotEmpty)
-                  .toList(),
-              context),
-        ),
+            stream: FTMS.scanResults,
+            initialData: const [],
+            builder: (c, snapshot) => Column(
+                  children: (snapshot.data ?? [])
+                      .where(
+                          (element) => element.device.platformName.isNotEmpty)
+                      .toList()
+                      .map(
+                        (d) => ListTile(
+                          title: FutureBuilder<bool>(
+                              future:
+                                  FTMS.isBluetoothDeviceFTMSDevice(d.device),
+                              initialData: false,
+                              builder: (c, snapshot) {
+                                return Text(
+                                  d.device.platformName.isEmpty
+                                      ? "(unknown device)"
+                                      : d.device.platformName,
+                                );
+                              }),
+                          trailing: StreamBuilder<BluetoothConnectionState>(
+                              stream: d.device.connectionState,
+                              builder: (c, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return const Text("...");
+                                }
+                                var deviceState = snapshot.data!;
+                                switch (deviceState) {
+                                  case BluetoothConnectionState.disconnected:
+                                    return ElevatedButton(
+                                      child: const Text("Pair"),
+                                      onPressed: () async {
+                                        final snackBar = SnackBar(
+                                          content: Text(
+                                              'Connecting to ${d.device.platformName}...'),
+                                          duration: const Duration(seconds: 2),
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
+                                        await FTMS
+                                            .connectToFTMSDevice(d.device);
+                                        deviceNotifier
+                                            .setConnectedDevice(d.device);
+                                        d.device.connectionState
+                                            .listen((state) async {
+                                          if (state ==
+                                              BluetoothConnectionState
+                                                  .disconnected) {
+                                            ftmsBloc
+                                                .ftmsDeviceDataControllerSink
+                                                .add(null);
+                                            return;
+                                          }
+                                        });
+                                      },
+                                    );
+                                  case BluetoothConnectionState.connected:
+                                    return SizedBox(
+                                      width: 250,
+                                      child: Wrap(
+                                        spacing: 2,
+                                        alignment: WrapAlignment.end,
+                                        direction: Axis.horizontal,
+                                        children: [
+                                          OutlinedButton(
+                                            child: const Text("Disconnect"),
+                                            onPressed: () =>
+                                                FTMS.disconnectFromFTMSDevice(
+                                                    d.device),
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  default:
+                                    return Text(deviceState.name);
+                                }
+                              }),
+                        ),
+                      )
+                      .toList(),
+                )),
       ],
     );
   }
