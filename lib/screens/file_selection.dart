@@ -13,6 +13,8 @@ class FileSelectionScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final fitFileState = ref.watch(fitFileProvider);
     final fitFileNotifier = ref.read(fitFileProvider.notifier);
+
+    //FIXME(juaoose): If I don't consume this here it is not available to children?
     final deviceState = ref.watch(deviceProvider);
 
     return Scaffold(
